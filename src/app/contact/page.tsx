@@ -25,11 +25,7 @@ export default function ContactPage() {
             <div className="flex flex-col gap-4 pt-4 border-t border-white/20">
               <div className="flex items-center gap-3 text-sm opacity-80">
                 <span className="text-lg">✉</span>
-                hello@firsthand.org
-              </div>
-              <div className="flex items-center gap-3 text-sm opacity-80">
-                <span className="text-lg">📍</span>
-                Salt Spring Island, BC &middot; Los Angeles, CA
+                hello@firsthand-foundation.com
               </div>
             </div>
           </div>

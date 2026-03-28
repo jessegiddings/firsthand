@@ -285,7 +285,7 @@ export default function ApplyPage() {
                 <h4 className="text-sm font-semibold text-red mb-2">This project may not be a fit right now</h4>
                 <p className="text-xs text-gray leading-[1.7]">
                   Firsthand currently supports specific, bounded, verifiable projects between $500&ndash;$50,000 USD with registered organisations.
-                  Contact us at <a href="mailto:hello@firsthand.org" className="text-terra">hello@firsthand.org</a> if you think there&apos;s still a fit.
+                  Contact us at <a href="mailto:hello@firsthand-foundation.com" className="text-terra">hello@firsthand-foundation.com</a> if you think there&apos;s still a fit.
                 </p>
               </div>
             )}
@@ -683,7 +683,7 @@ export default function ApplyPage() {
             </div>
             <p className="text-[13px] text-lgray">
               Save your reference number. Questions?{" "}
-              <a href="mailto:hello@firsthand.org" className="text-terra">hello@firsthand.org</a>
+              <a href="mailto:hello@firsthand-foundation.com" className="text-terra">hello@firsthand-foundation.com</a>
             </p>
           </div>
         )}

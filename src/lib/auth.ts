@@ -9,10 +9,10 @@ export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma) as Adapter,
   providers: [
     EmailProvider({
-      from: "Firsthand <hello@firsthand.org>",
+      from: "Firsthand <hello@firsthand-foundation.com>",
       sendVerificationRequest: async ({ identifier: email, url }) => {
         await getResend().emails.send({
-          from: "Firsthand <hello@firsthand.org>",
+          from: "Firsthand <hello@firsthand-foundation.com>",
           to: email,
           subject: "Sign in to Firsthand",
           html: `

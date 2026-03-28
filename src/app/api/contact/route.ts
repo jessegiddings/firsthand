@@ -16,8 +16,8 @@ export async function POST(req: NextRequest) {
 
     // Send notification email to admin
     await getResend().emails.send({
-      from: "Firsthand <hello@firsthand.org>",
-      to: "hello@firsthand.org",
+      from: "Firsthand <hello@firsthand-foundation.com>",
+      to: "hello@firsthand-foundation.com",
       subject: `New contact: ${data.type} — ${data.name}`,
       html: `
         <h2>New Contact Form Submission</h2>

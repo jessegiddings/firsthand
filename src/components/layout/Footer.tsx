@@ -97,7 +97,7 @@ export function Footer() {
             &copy; {new Date().getFullYear()} Firsthand. All rights reserved.
           </p>
           <p className="text-xs text-white/30 font-mono">
-            hello@firsthand.org
+            hello@firsthand-foundation.com
           </p>
         </div>
       </div>
