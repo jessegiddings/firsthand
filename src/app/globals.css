@@ -3,25 +3,73 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --white: #ffffff;
+  --off: #faf9f7;
+  --ink: #111009;
+  --ink-soft: #4a4740;
+  --ink-muted: #9a9590;
+  --terra: #c4683a;
+  --terra-light: #e8855a;
+  --terra-2: #e07848;
+  --terra-pale: #f5ede7;
+  --sage: #3d5244;
+  --sage-light: #f0f4f1;
+  --dust: #e8e2d8;
+  --rule: #ede8e0;
+  --gray: #6b6560;
+  --lgray: #b0a898;
+  --green: #2d7a4f;
+  --green-bg: #e8f5ee;
+  --amber: #a07020;
+  --amber-bg: #fff5e0;
+  --red: #a03020;
+  --red-bg: #fff0ee;
+  --font-display: "Playfair Display", serif;
+  --font-body: "DM Sans", sans-serif;
+  --font-mono: "DM Mono", monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
+  font-weight: 400;
+  color: var(--ink);
+  background: var(--white);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+/* ─── ANIMATION DELAYS ─── */
+.animate-delay-1 { animation-delay: 0.1s; }
+.animate-delay-2 { animation-delay: 0.2s; }
+.animate-delay-3 { animation-delay: 0.3s; }
+.animate-delay-4 { animation-delay: 0.4s; }
+
+/* ─── FORM INPUTS GLOBAL ─── */
+@layer components {
+  .form-input {
+    @apply w-full px-4 py-3 border border-dust rounded-md font-body text-sm text-ink
+           outline-none transition-colors duration-150 bg-white;
+  }
+  .form-input:focus {
+    @apply border-terra;
+  }
+  .form-input::placeholder {
+    @apply text-ink-muted;
+  }
+
+  .form-label {
+    @apply text-xs font-semibold text-ink tracking-wider uppercase font-mono;
+  }
+
+  .form-textarea {
+    @apply form-input resize-y min-h-[120px] leading-relaxed;
+  }
+
+  .form-select {
+    @apply form-input appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2012%2012%22%3E%3Cpath%20fill%3D%22%236b6560%22%20d%3D%22M6%208L1%203h10z%22%2F%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[right_16px_center];
   }
 }
