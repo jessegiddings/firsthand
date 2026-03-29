@@ -14,11 +14,38 @@ export async function POST(req: NextRequest) {
     const projectDescription = formData.get("projectDescription") as string;
     const budget = formData.get("budget") as string;
 
+    // Capture additional fields for richer AI screening context
+    const projectTitle = (formData.get("projectTitle") as string) || "";
+    const category = (formData.get("category") as string) || "";
+    const projectCountry = (formData.get("projectCountry") as string) || "";
+    const location = (formData.get("location") as string) || "";
+    const gpsCoordinates = (formData.get("gpsCoordinates") as string) || "";
+    const impactCount = (formData.get("impactCount") as string) || "";
+    const timeline = (formData.get("timeline") as string) || "";
+    const evidencePlan = (formData.get("evidencePlan") as string) || "";
+    const paymentMethod = (formData.get("paymentMethod") as string) || "";
+    const yearFounded = (formData.get("yearFounded") as string) || "";
+    const staffCount = (formData.get("staffCount") as string) || "";
+    const milestones = (formData.get("milestones") as string) || "[]";
+
+    // Build enriched project description for AI screening
+    const enrichedDescription = [
+      projectTitle && `Project Title: ${projectTitle}`,
+      category && `Category: ${category}`,
+      projectCountry && `Project Country: ${projectCountry}`,
+      location && `Location: ${location}`,
+      gpsCoordinates && `GPS: ${gpsCoordinates}`,
+      `Description: ${projectDescription}`,
+      impactCount && `Beneficiaries: ${impactCount}`,
+      timeline && `Timeline: ${timeline}`,
+      evidencePlan && `Evidence Plan: ${evidencePlan}`,
+      paymentMethod && `Payment Method: ${paymentMethod}`,
+      yearFounded && `Year Founded: ${yearFounded}`,
+      staffCount && `Staff Count: ${staffCount}`,
+      milestones !== "[]" && `Milestones: ${milestones}`,
+    ].filter(Boolean).join("\n");
+
     // TODO: Upload files to Supabase Storage bucket "partner-docs"
-    // const registrationFile = formData.get("registration") as File;
-    // const sitePhotoFile = formData.get("sitePhoto") as File;
-    // const endorsementFile = formData.get("endorsement") as File;
-    // const financialFile = formData.get("financial") as File;
 
     const application = await prisma.partnerApplication.create({
       data: {
@@ -28,11 +55,9 @@ export async function POST(req: NextRequest) {
         contactName,
         contactEmail,
         missionStatement,
-        projectDescription,
+        projectDescription: enrichedDescription,
         budgetEstimate: parseFloat(budget) || 0,
         supportingDocUrls: [],
-        // TODO: Phase 2 — trigger AI screening via Anthropic Claude API
-        // aiScore will be populated by the AI screening pipeline
       },
     });
 

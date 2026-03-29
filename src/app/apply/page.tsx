@@ -56,8 +56,10 @@ export default function ApplyPage() {
   ]);
   const [uploadedFiles, setUploadedFiles] = useState<Record<string, File[]>>({});
   const [submitting, setSubmitting] = useState(false);
+  const [screening, setScreening] = useState(false);
   const [, setSubmitted] = useState(false);
   const [refNumber, setRefNumber] = useState("");
+  const [aiScore, setAiScore] = useState<{ total: number; flag: string; summary: string; dimensions: Record<string, number> } | null>(null);
 
   const {
     register,
@@ -145,9 +147,29 @@ export default function ApplyPage() {
 
       if (res.ok) {
         const data = await res.json();
-        setRefNumber(data.refNumber || "FH-2025-" + Math.random().toString().slice(2, 6));
+        setRefNumber(data.refNumber || "FH-2026-" + Math.random().toString().slice(2, 6));
         setSubmitted(true);
         setStage(5);
+        setSubmitting(false);
+
+        // Trigger AI screening in background
+        setScreening(true);
+        try {
+          const screenRes = await fetch("/api/screen-application", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ applicationId: data.id }),
+          });
+          if (screenRes.ok) {
+            const screenData = await screenRes.json();
+            setAiScore(screenData.aiScore);
+          }
+        } catch {
+          // AI screening failed silently — application still submitted for manual review
+        } finally {
+          setScreening(false);
+        }
+        return;
       }
     } catch {
       // Handle error
@@ -676,8 +698,47 @@ export default function ApplyPage() {
             <div className="w-16 h-16 rounded-full bg-sage text-white flex items-center justify-center text-2xl font-bold mx-auto mb-6">\u2713</div>
             <h2 className="font-display text-[28px] font-bold mb-3">Application submitted.</h2>
             <p className="text-sm text-gray leading-[1.7] max-w-[400px] mx-auto mb-6">
-              Your application is now in AI screening. A member of the Firsthand team will review the results and be in touch within 5 business days.
+              {screening
+                ? "Our AI is reviewing your application now. This typically takes a few seconds..."
+                : "Your application has been received. A member of the Firsthand team will review and be in touch within 5 business days."}
             </p>
+
+            {screening && (
+              <div className="flex items-center justify-center gap-2 mb-6">
+                <div className="w-2 h-2 rounded-full bg-terra animate-pulse" />
+                <span className="text-xs text-terra font-semibold">AI Screening in progress...</span>
+              </div>
+            )}
+
+            {aiScore && !screening && (
+              <div className="max-w-[420px] mx-auto mb-6 text-left">
+                <div className="bg-white border border-rule rounded-lg p-5">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className={cn(
+                      "w-11 h-11 rounded-full flex items-center justify-center text-sm font-bold border-[3px]",
+                      aiScore.total >= 70 && "border-green text-green",
+                      aiScore.total >= 40 && aiScore.total < 70 && "border-amber text-amber",
+                      aiScore.total < 40 && "border-red text-red"
+                    )}>
+                      {aiScore.total}
+                    </div>
+                    <div>
+                      <div className="text-sm font-semibold text-ink">AI Screening Complete</div>
+                      <div className={cn(
+                        "text-[10px] font-semibold uppercase tracking-[0.1em]",
+                        aiScore.flag === "APPROVE" && "text-green",
+                        aiScore.flag === "REVIEW" && "text-amber",
+                        aiScore.flag === "DECLINE" && "text-red"
+                      )}>
+                        {aiScore.flag === "APPROVE" ? "Ready for Review" : aiScore.flag === "REVIEW" ? "Additional Info Needed" : "Further Review Required"}
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-xs text-gray leading-[1.7]">{aiScore.summary}</p>
+                </div>
+              </div>
+            )}
+
             <div className="font-mono text-xs tracking-[0.15em] text-terra bg-terra-pale px-4 py-2 rounded inline-block mb-6">
               REF: {refNumber}
             </div>

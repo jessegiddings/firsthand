@@ -227,6 +227,14 @@ model Waitlist {
   createdAt DateTime     @default(now())
 }
 
+model DonorPreference {
+  id              String   @id @default(cuid())
+  email           String
+  answers         Json
+  recommendations Json?
+  createdAt       DateTime @default(now())
+}
+
 model Story {
   id                       String    @id @default(cuid())
   projectId                String
