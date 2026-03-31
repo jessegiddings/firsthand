@@ -27,7 +27,7 @@ const dmMono = DM_Mono({
 export const metadata: Metadata = {
   title: "Firsthand — Verified Impact Platform",
   description:
-    "Firsthand connects donors directly to verified community needs. No opaque institutions. No self-reported impact. AI-verified, milestone-gated, community-owned.",
+    "Firsthand connects donors directly to verified community needs. Founded by Jesse Giddings. AI-verified milestones. Escrow-gated fund release. Community-owned stories.",
   openGraph: {
     title: "Firsthand — Verified Impact Platform",
     description:

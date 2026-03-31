@@ -23,6 +23,16 @@ export default function HomePage() {
               No opaque institutions. No self-reported impact.
               Just a direct line — confirmed by AI — from your giving to real change.
             </p>
+            <blockquote className="border-l-2 border-terra/40 pl-5 py-1 animate-fade-up animate-delay-3">
+              <p className="font-display text-[15px] italic text-terra leading-[1.65]">
+                &ldquo;I spent a decade raising money for communities I&apos;d never met.
+                Then I met them. This is what I built so the next donor
+                doesn&apos;t have to take it on faith.&rdquo;
+              </p>
+              <cite className="font-mono text-[9px] tracking-[0.2em] uppercase text-ink-muted not-italic mt-2 block">
+                — Jesse Giddings, Founder
+              </cite>
+            </blockquote>
             <div className="flex items-center gap-4 flex-wrap animate-fade-up animate-delay-3">
               <Link href="/for-donors">
                 <Button variant="primary" arrow>Join the Waitlist</Button>
