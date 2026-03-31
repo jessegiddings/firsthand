@@ -38,13 +38,35 @@ export default function AboutPage() {
             {[
               { title: "Founded on the ground", desc: "Our founding experience spans Kenya, India, and the Syrian refugee crisis — over a decade of working inside humanitarian systems and understanding exactly where they break down." },
               { title: "Structure: Hybrid Social Enterprise", desc: "Firsthand operates as a hybrid — a nonprofit arm for grant eligibility and tax receipting, and a for-profit arm to build and operate the technology. The best of both models." },
-              { title: "Currently: Founding Phase", desc: "We are onboarding founding donors, community partners, and aligned investors. The platform launches in 2025 with a curated pilot cohort of verified projects across three regions." },
+              { title: "Currently: Founding Phase", desc: "We are launching our founding pilot cohort in Q2 2026 — verified projects across Los Angeles, Kenya, and India. Founding donors, community partners, and aligned investors can apply to participate now." },
             ].map((block) => (
               <div key={block.title} className="p-8 bg-paper border-t-[3px] border-terra">
                 <h4 className="font-display text-lg font-bold mb-2">{block.title}</h4>
                 <p className="text-[13px] leading-[1.65] text-ink-soft">{block.desc}</p>
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* The Founder */}
+        <div className="max-w-[1200px] mx-auto px-6 md:px-12 py-24">
+          <EyebrowLabel className="mb-5">The Founder</EyebrowLabel>
+          <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-10 items-start">
+            <div className="w-[200px] h-[200px] rounded-full bg-sage flex items-center justify-center flex-shrink-0 mx-auto md:mx-0">
+              <span className="text-white/60 text-sm font-mono">Photo</span>
+            </div>
+            <div>
+              <h3 className="font-display text-[28px] font-bold mb-1">Jesse O&apos;Brien</h3>
+              <p className="text-sm text-ink-muted mb-5">Founder &amp; Executive Director</p>
+              <div className="flex flex-col gap-4">
+                <p className="text-[15px] leading-[1.85] text-ink-soft">
+                  Jesse O&apos;Brien spent over a decade working at the intersection of humanitarian fieldwork and storytelling. As a field director with WE Charity, he oversaw education and infrastructure programs across Kenya and India — building schools, training educators, and working directly with rural communities. He later brought those stories to national television as a host, and to documentary photography documenting the Syrian refugee crisis.
+                </p>
+                <p className="text-[15px] leading-[1.85] text-ink-soft">
+                  Firsthand is the synthesis of those threads: technology infrastructure designed to make the direct connection between donor and community not just possible, but provably true.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 

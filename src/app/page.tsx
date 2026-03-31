@@ -50,28 +50,20 @@ export default function HomePage() {
           </div>
 
           <div className="hidden lg:block animate-fade-up animate-delay-2">
-            <div className="bg-paper border border-rule rounded-2xl p-9 relative overflow-hidden">
+            <div className="bg-paper border border-rule rounded-2xl p-9 relative overflow-hidden text-center">
               <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-terra to-terra-light" />
-              <div className="font-mono text-[9px] tracking-[0.2em] uppercase text-ink-muted mb-5">
-                Live Impact Feed
+              <div className="font-mono text-[9px] tracking-[0.2em] uppercase text-terra mb-5">
+                Founding Projects
               </div>
-              <div className="flex flex-col gap-4">
-                {[
-                  { title: "Classroom roof — Eldoret, Kenya", desc: "Verified complete · 47 students impacted", badge: "Verified", variant: "verified" as const, dot: "bg-sage" },
-                  { title: "Water pump repair — Nakuru County", desc: "Milestone 2 of 3 · $1,200 raised of $1,800", badge: "Live", variant: "live" as const, dot: "bg-terra" },
-                  { title: "Fishing coop tools — Tofino, BC", desc: "Fully funded · Verification pending", badge: "Funded", variant: "funded" as const, dot: "border-2 border-terra bg-dust" },
-                  { title: "School library — Jaipur, India", desc: "Verified complete · 312 books delivered", badge: "Verified", variant: "verified" as const, dot: "bg-sage" },
-                ].map((item) => (
-                  <div key={item.title} className="flex gap-3.5 items-start p-4 bg-white rounded-[10px] border border-rule transition-colors duration-200 hover:border-terra">
-                    <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 mt-[5px] ${item.dot}`} />
-                    <div className="flex-1">
-                      <h4 className="text-[13px] font-semibold text-ink mb-0.5">{item.title}</h4>
-                      <p className="text-xs text-ink-muted leading-[1.5]">{item.desc}</p>
-                    </div>
-                    <Badge variant={item.variant} className="ml-auto flex-shrink-0">{item.badge}</Badge>
-                  </div>
-                ))}
-              </div>
+              <h3 className="font-display text-[22px] font-bold leading-[1.2] mb-4">
+                Our first verified projects are being confirmed now.
+              </h3>
+              <p className="text-[13px] leading-[1.65] text-ink-muted max-w-[400px] mx-auto mb-6">
+                We&apos;re onboarding our founding cohort of community partners across Los Angeles, Kenya, and India. Join the waitlist to be notified when they go live.
+              </p>
+              <Link href="/for-donors">
+                <Button variant="primary" arrow>Join the Waitlist</Button>
+              </Link>
             </div>
           </div>
         </section>

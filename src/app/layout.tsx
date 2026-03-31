@@ -27,7 +27,30 @@ const dmMono = DM_Mono({
 export const metadata: Metadata = {
   title: "Firsthand — Verified Impact Platform",
   description:
-    "Firsthand connects donors directly to verified community needs. No opaque institutions. No self-reported impact. Just a direct line — confirmed by AI — from your giving to real change.",
+    "Firsthand connects donors directly to verified community needs. No opaque institutions. No self-reported impact. AI-verified, milestone-gated, community-owned.",
+  openGraph: {
+    title: "Firsthand — Verified Impact Platform",
+    description:
+      "Give with certainty. Funds held in escrow, released only when AI independently verifies milestone completion.",
+    url: "https://www.firsthand-foundation.com",
+    siteName: "Firsthand Foundation",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Firsthand — Verified Impact Platform",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Firsthand — Verified Impact Platform",
+    description:
+      "Give with certainty. Funds held in escrow, released only when AI independently verifies milestone completion.",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function RootLayout({

@@ -57,9 +57,14 @@ export default function ForCommunitiesPage() {
             <p className="text-[15px] leading-[1.7] text-ink-soft max-w-[600px] mb-7">
               We&apos;re onboarding our first cohort of community partners across Kenya, Canada, and India. If you&apos;re a local organization, cooperative, or community group with a verified need — we want to hear from you.
             </p>
-            <Link href="/contact">
-              <Button variant="primary" arrow>Get in Touch</Button>
-            </Link>
+            <div className="flex flex-col sm:flex-row items-start gap-4">
+              <Link href="/apply">
+                <Button variant="primary" arrow>Apply to Partner</Button>
+              </Link>
+              <Link href="/contact" className="text-[13px] text-terra font-semibold no-underline hover:text-terra-light transition-colors inline-flex items-center gap-1.5 py-3.5">
+                Have questions? Get in touch &rarr;
+              </Link>
+            </div>
           </div>
         </div>
       </main>

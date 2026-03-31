@@ -281,6 +281,9 @@ export default function ForDonorsPage() {
                 >
                   {submitting ? "Joining..." : "Join Waitlist \u2192"}
                 </button>
+                <p className="text-[10px] text-white/35 italic leading-[1.6] mt-2 text-center">
+                  Firsthand Foundation is a Wyoming nonprofit corporation. 501(c)(3) tax-exempt status is pending IRS determination. Donations may not be tax-deductible until the determination letter is received.
+                </p>
               </form>
             </div>
           </div>
@@ -320,6 +323,9 @@ export default function ForDonorsPage() {
                 >
                   {submitting ? "Joining..." : "Join Waitlist \u2192"}
                 </button>
+                <p className="text-[10px] text-white/35 italic leading-[1.6] mt-2 text-center">
+                  Firsthand Foundation is a Wyoming nonprofit corporation. 501(c)(3) tax-exempt status is pending IRS determination. Donations may not be tax-deductible until the determination letter is received.
+                </p>
               </form>
             </div>
           </div>
