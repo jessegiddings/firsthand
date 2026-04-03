@@ -101,7 +101,7 @@ export default function AboutPage() {
               data-photo-slot="jesse-giddings"
             >
               <Image
-                src="/images/jesse-giddings.jpg"
+                src="/images/IMG_4403.jpeg"
                 alt="Jesse Giddings — Founder & Executive Director of Firsthand Foundation"
                 fill
                 className="object-cover object-top"

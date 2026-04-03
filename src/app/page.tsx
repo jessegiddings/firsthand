@@ -169,7 +169,7 @@ export default function HomePage() {
             {/* Photo placeholder */}
             <div className="aspect-square max-w-[320px] mx-auto lg:mx-0 rounded-xl bg-sage relative overflow-hidden" data-photo-slot="jesse-giddings">
               <Image
-                src="/images/jesse-giddings.jpg"
+                src="/images/IMG_4403.jpeg"
                 alt="Jesse Giddings — Founder of Firsthand Foundation"
                 fill
                 className="object-cover object-top"
