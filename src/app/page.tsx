@@ -178,10 +178,10 @@ export default function HomePage() {
               <h3 className="font-display text-[22px] font-bold mb-1">Jesse Giddings</h3>
               <p className="text-sm text-ink-muted mb-5">Founder &amp; Executive Director</p>
               <p className="text-[14px] leading-[1.8] text-ink-soft mb-5">
-                A philanthropy strategist and connector with 15+ years bridging global humanitarian causes, high-profile donors, and mission-driven partnerships. Jesse hosted national WE Charity events for a decade, standing on stage in front of 20,000 people across Canada while cultivating major donor relationships and leading impact trips to Kenya and India. As a television personality on E! News and MuchMusic and through celebrity partnerships at ZDASH, he developed the storytelling and relationship skills that now drive Firsthand&apos;s model.
+                A philanthropy strategist and connector with 15+ years bridging global humanitarian causes, high-profile donors, and mission-driven partnerships. Jesse hosted national WE Charity events for a decade, standing on stage in front of 20,000 people across Canada while cultivating major donor relationships and leading impact trips to Kenya and India. As a television personality on E! News and MuchMusic and with years in talent management and film production, he developed the storytelling and relationship skills that now drive Firsthand&apos;s model.
               </p>
               <div className="flex flex-wrap gap-2">
-                {["WE Charity", "10+ years", "E! News", "MuchMusic", "Kenya", "India fieldwork", "Syrian refugee crisis", "IMC", "ZDASH", "@jessegiddings"].map((tag) => (
+                {["WE Charity", "10+ years", "E! News", "MuchMusic", "Kenya", "India fieldwork", "Syrian refugee crisis", "IMC", "Talent Management", "Film Production", "@jessegiddings"].map((tag) => (
                   <span key={tag} className="font-mono text-[9px] tracking-[0.1em] uppercase px-2.5 py-1 rounded bg-terra-pale text-terra">
                     {tag}
                   </span>
