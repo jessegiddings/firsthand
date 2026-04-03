@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { EyebrowLabel } from "@/components/ui";
@@ -96,11 +97,17 @@ export default function AboutPage() {
             {/* Photo placeholder */}
             {/* Replace with headshot: /images/jesse-giddings.jpg */}
             <div
-              className="aspect-[3/4] w-full rounded-[4px] bg-sage flex items-center justify-center relative overflow-hidden"
+              className="aspect-[3/4] w-full rounded-[4px] bg-sage relative overflow-hidden"
               data-photo-slot="jesse-giddings"
             >
-              <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")", backgroundSize: "128px 128px" }} />
-              <span className="font-mono text-white/50 text-xs tracking-[0.15em]">Jesse Giddings</span>
+              <Image
+                src="/images/jesse-giddings.jpg"
+                alt="Jesse Giddings — Founder & Executive Director of Firsthand Foundation"
+                fill
+                className="object-cover object-top"
+                sizes="(max-width: 768px) 100vw, 40vw"
+                priority
+              />
             </div>
 
             {/* Content */}

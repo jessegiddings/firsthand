@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { EyebrowLabel, Badge, Button } from "@/components/ui";
@@ -166,8 +167,14 @@ export default function HomePage() {
         <div className="py-20 px-6 md:px-12">
           <div className="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-12 items-center">
             {/* Photo placeholder */}
-            <div className="aspect-square max-w-[320px] mx-auto lg:mx-0 rounded-xl bg-sage flex items-center justify-center" data-photo-slot="jesse-giddings">
-              <span className="font-display text-[48px] font-black text-white/30">JG</span>
+            <div className="aspect-square max-w-[320px] mx-auto lg:mx-0 rounded-xl bg-sage relative overflow-hidden" data-photo-slot="jesse-giddings">
+              <Image
+                src="/images/jesse-giddings.jpg"
+                alt="Jesse Giddings — Founder of Firsthand Foundation"
+                fill
+                className="object-cover object-top"
+                sizes="320px"
+              />
             </div>
 
             {/* Content */}
