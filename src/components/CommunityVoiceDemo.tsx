@@ -1,7 +1,6 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { EyebrowLabel } from "@/components/ui";
 
 interface CommunityVoiceDemoProps {
   className?: string;
