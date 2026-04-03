@@ -26,8 +26,42 @@ export default function AboutPage() {
           </p>
         </div>
 
+        {/* Organizational Status */}
+        <div className="bg-paper py-16 px-6 md:px-12">
+          <div className="max-w-[1200px] mx-auto">
+            <EyebrowLabel className="mb-5">Status</EyebrowLabel>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+              {[
+                { label: "Wyoming Nonprofit Corp.", status: "confirmed" },
+                { label: "EIN Obtained", status: "confirmed" },
+                { label: "501(c)(3) Pending", status: "pending" },
+                { label: "Stripe Connect", status: "confirmed" },
+                { label: "Supabase Live", status: "confirmed" },
+                { label: "Gates Foundation App", note: "April 2026", status: "pending" },
+              ].map((item) => (
+                <div key={item.label} className="p-4 bg-white rounded-lg border border-rule">
+                  <div
+                    className={`inline-block w-2 h-2 rounded-full mb-2 ${
+                      item.status === "confirmed" ? "bg-green" : "bg-amber"
+                    }`}
+                  />
+                  <h4 className="text-[12px] font-semibold text-ink leading-tight">{item.label}</h4>
+                  {item.note && <p className="text-[10px] text-ink-muted mt-0.5">{item.note}</p>}
+                  <span
+                    className={`inline-block font-mono text-[8px] tracking-[0.1em] uppercase mt-1.5 px-1.5 py-0.5 rounded ${
+                      item.status === "confirmed" ? "bg-green-bg text-green" : "bg-amber-bg text-amber"
+                    }`}
+                  >
+                    {item.status}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
         {/* Body */}
-        <div className="max-w-[1200px] mx-auto px-6 md:px-12 pb-24 grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
+        <div className="max-w-[1200px] mx-auto px-6 md:px-12 py-24 grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
           <div>
             {[
               "Over more than a decade building schools across Kenya and India, training educators in underserved communities, and documenting the human cost of the Syrian refugee crisis with a camera, our founding team developed a deep conviction: the problem with philanthropy isn't the people. It's the architecture.",
@@ -59,7 +93,7 @@ export default function AboutPage() {
         <div className="max-w-[1200px] mx-auto px-6 md:px-12 py-24">
           <EyebrowLabel className="mb-8">The Founder</EyebrowLabel>
           <div className="grid grid-cols-1 md:grid-cols-[2fr_3fr] gap-12 items-start">
-            {/* Photo column */}
+            {/* Photo placeholder */}
             {/* Replace with headshot: /images/jesse-giddings.jpg */}
             <div
               className="aspect-[3/4] w-full rounded-[4px] bg-sage flex items-center justify-center relative overflow-hidden"
@@ -69,38 +103,28 @@ export default function AboutPage() {
               <span className="font-mono text-white/50 text-xs tracking-[0.15em]">Jesse Giddings</span>
             </div>
 
-            {/* Text column */}
+            {/* Content */}
             <div>
-              <blockquote className="font-display text-[clamp(22px,2.5vw,32px)] italic text-terra leading-[1.3] mb-8">
-                &ldquo;Nobody was watching. That was the point.&rdquo;
+              <blockquote className="font-display text-[clamp(20px,2.5vw,28px)] italic text-terra leading-[1.35] mb-8">
+                &ldquo;The communities I visited in Kenya and India were extraordinary — resourceful, visionary, deeply capable. What they lacked wasn&apos;t ability. It was a trust infrastructure that let the world see it.&rdquo;
               </blockquote>
 
               <h3 className="font-display text-[28px] font-bold mb-1">Jesse Giddings</h3>
-              <p className="text-sm text-ink-muted mb-8">Founder &amp; Executive Director</p>
+              <p className="text-sm text-ink-muted mb-6">Founder &amp; Executive Director</p>
 
-              <div className="flex flex-col gap-5">
-                <p className="text-[15px] leading-[1.85] text-ink-soft">
-                  For a decade, Jesse Giddings stood on stages in front of 20,000 people.
-                </p>
-                <p className="text-[15px] leading-[1.85] text-ink-soft">
-                  As an international television host on E! News and MuchMusic, he spent his working life in entertainment — red carpets, celebrity interviews, arenas full of fans. On his holidays, he went somewhere else entirely.
-                </p>
-                <p className="text-[15px] leading-[1.85] text-ink-soft">
-                  While colleagues vacationed, Jesse embedded with Syrian refugees as a humanitarian photographer — traveling with families in migration, documenting what displacement actually looks like at ground level. No network. No crew. Just a camera and his own time.
-                </p>
-                <p className="text-[15px] leading-[1.85] text-ink-soft">
-                  It was WE Charity that first took him to Kenya and India — not as a journalist, but as a guest who could see what donor dollars built. What he found there, and what he&apos;d already seen in Syria, confirmed the same thing: the gap between generosity and accountability wasn&apos;t a people problem. It was a systems problem. Good donors. Real needs. A broken pipe between them.
-                </p>
-                <p className="text-[15px] leading-[1.85] text-ink-soft">
-                  He spent years inside that machinery — coordinating celebrity partnerships for WE Charity, hosting field trips, understanding from the inside exactly where the model fails. Firsthand is what he built when the tools finally existed to fix it.
-                </p>
-                <p className="text-[15px] leading-[1.85] text-ink-soft">
-                  He is based in Los Angeles. He is still going back.
-                </p>
+              <p className="text-[15px] leading-[1.85] text-ink-soft mb-5">
+                A philanthropy strategist and connector with 15+ years bridging global humanitarian causes, high-profile donors, and mission-driven partnerships. Jesse hosted national WE Charity events for a decade, standing on stage in front of 20,000 people across Canada while cultivating major donor relationships and leading impact trips to Kenya and India. As a television personality on E! News and MuchMusic and through celebrity partnerships at ZDASH, he developed the storytelling and relationship skills that now drive Firsthand&apos;s model. His documentary photography from the Syrian refugee crisis gave him firsthand exposure to humanitarian work that no boardroom produces. Firsthand is the synthesis of all of it.
+              </p>
+
+              <div className="flex flex-wrap gap-2 mb-6">
+                {["WE Charity", "10+ years", "E! News", "MuchMusic", "Kenya", "India fieldwork", "Syrian refugee crisis", "IMC", "ZDASH", "@jessegiddings"].map((tag) => (
+                  <span key={tag} className="font-mono text-[9px] tracking-[0.1em] uppercase px-2.5 py-1 rounded bg-terra-pale text-terra">
+                    {tag}
+                  </span>
+                ))}
               </div>
 
-              {/* Social / Contact row */}
-              <div className="flex items-center gap-6 mt-8 pt-6 border-t border-rule">
+              <div className="flex items-center gap-6 pt-6 border-t border-rule">
                 <a
                   href="https://instagram.com/jessegiddings"
                   target="_blank"
@@ -116,6 +140,47 @@ export default function AboutPage() {
                   hello@firsthand-foundation.com <span className="text-[10px]">&rarr;</span>
                 </a>
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Roadmap Timeline */}
+        <div className="bg-paper py-20 px-6 md:px-12">
+          <div className="max-w-[800px] mx-auto">
+            <EyebrowLabel className="mb-5">Roadmap</EyebrowLabel>
+            <h2 className="font-display text-display-md mb-12">Where we are. Where we&apos;re going.</h2>
+            <div className="flex flex-col gap-0">
+              {[
+                { year: "2025", title: "Founded & incorporated", desc: "Wyoming nonprofit, EIN obtained, initial stack deployed to Vercel.", status: "done" as const },
+                { year: "Q1 2026", title: "Core platform built", desc: "Application portal, donor matching, Gate 1 AI screening, agent infrastructure.", status: "done" as const },
+                { year: "Q2 2026", title: "Pilot partnerships confirmed", desc: "Los Angeles / Kenya / India — founding cohort of community partners onboarded.", status: "current" as const },
+                { year: "Q3 2026", title: "Pilot launch", desc: "First live projects, first verified milestones, first community voice reports.", status: "upcoming" as const },
+                { year: "2027", title: "Scale & licensing", desc: "AI module licensing, expanded geographies, Gates grant deployment.", status: "future" as const },
+              ].map((item, i) => (
+                <div key={item.year} className="flex gap-6 items-start">
+                  {/* Timeline dot and line */}
+                  <div className="flex flex-col items-center flex-shrink-0 w-6">
+                    <div
+                      className={`w-4 h-4 rounded-full border-2 flex-shrink-0 ${
+                        item.status === "done"
+                          ? "bg-sage border-sage"
+                          : item.status === "current"
+                          ? "bg-terra border-terra"
+                          : "bg-transparent border-rule"
+                      }`}
+                    />
+                    {i < 4 && <div className="w-px h-16 bg-rule" />}
+                  </div>
+                  {/* Content */}
+                  <div className="pb-8">
+                    <div className="font-mono text-[10px] tracking-[0.15em] uppercase text-ink-muted mb-1">
+                      {item.year}
+                    </div>
+                    <h4 className="text-[15px] font-semibold text-ink mb-1">{item.title}</h4>
+                    <p className="text-[13px] text-ink-muted leading-[1.6]">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>

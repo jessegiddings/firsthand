@@ -8,9 +8,9 @@ import { cn } from "@/lib/utils";
 const navLinks = [
   { href: "/how-it-works", label: "How It Works" },
   { href: "/for-donors", label: "For Donors" },
-  { href: "/for-communities", label: "For Communities" },
+  { href: "/for-partners", label: "For Partners" },
+  { href: "/why-firsthand", label: "Why Firsthand" },
   { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
 ];
 
 export function Navbar() {
@@ -27,14 +27,15 @@ export function Navbar() {
       </Link>
 
       {/* Desktop nav */}
-      <div className="hidden md:flex items-center gap-2">
+      <div className="hidden md:flex items-center gap-1">
         {navLinks.map((link) => (
           <Link
             key={link.href}
             href={link.href}
             className={cn(
-              "text-[13px] font-medium text-ink-soft px-3.5 py-2 rounded-md transition-all duration-150 tracking-[0.01em] no-underline hover:text-ink hover:bg-paper",
-              pathname === link.href && "text-terra"
+              "text-[13px] font-medium text-ink-soft px-3 py-2 rounded-md transition-all duration-150 tracking-[0.01em] no-underline hover:text-ink hover:bg-paper",
+              (pathname === link.href || pathname.startsWith(link.href + "/")) &&
+                "text-terra font-semibold"
             )}
           >
             {link.label}
@@ -42,7 +43,7 @@ export function Navbar() {
         ))}
         <Link
           href="/for-donors"
-          className="bg-ink text-white text-[13px] font-semibold px-5 py-2.5 rounded-md no-underline transition-colors duration-150 hover:bg-terra tracking-[0.01em] ml-2"
+          className="bg-terra text-white text-[13px] font-semibold px-5 py-2.5 rounded-md no-underline transition-colors duration-150 hover:bg-terra-light tracking-[0.01em] ml-2"
         >
           Join Waitlist
         </Link>
@@ -69,7 +70,8 @@ export function Navbar() {
               onClick={() => setMobileOpen(false)}
               className={cn(
                 "text-[13px] font-medium text-ink-soft px-3.5 py-2 rounded-md transition-all duration-150 no-underline hover:text-ink hover:bg-paper",
-                pathname === link.href && "text-terra"
+                (pathname === link.href || pathname.startsWith(link.href + "/")) &&
+                  "text-terra font-semibold"
               )}
             >
               {link.label}
@@ -78,7 +80,7 @@ export function Navbar() {
           <Link
             href="/for-donors"
             onClick={() => setMobileOpen(false)}
-            className="bg-ink text-white text-[13px] font-semibold px-5 py-2.5 rounded-md no-underline transition-colors duration-150 hover:bg-terra tracking-[0.01em] mt-2 text-center"
+            className="bg-terra text-white text-[13px] font-semibold px-5 py-2.5 rounded-md no-underline transition-colors duration-150 hover:bg-terra-light tracking-[0.01em] mt-2 text-center"
           >
             Join Waitlist
           </Link>

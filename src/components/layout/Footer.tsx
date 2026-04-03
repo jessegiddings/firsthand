@@ -3,7 +3,8 @@ import Link from "next/link";
 const platformLinks = [
   { href: "/how-it-works", label: "How It Works" },
   { href: "/for-donors", label: "For Donors" },
-  { href: "/for-communities", label: "For Communities" },
+  { href: "/for-partners", label: "For Partners" },
+  { href: "/why-firsthand", label: "Why Firsthand" },
 ];
 
 const companyLinks = [
@@ -16,7 +17,8 @@ const companyLinks = [
 
 const involvedLinks = [
   { href: "/for-donors", label: "Donor Waitlist" },
-  { href: "/for-communities", label: "Community Partners" },
+  { href: "/for-partners", label: "Community Partners" },
+  { href: "/apply", label: "Apply to Partner" },
   { href: "/contact", label: "Investors" },
 ];
 
@@ -133,7 +135,7 @@ export function Footer() {
 
         <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
           <p className="text-xs text-white/30 font-mono">
-            &copy; {new Date().getFullYear()} Firsthand. All rights reserved.
+            &copy; {new Date().getFullYear()} Firsthand Foundation &middot; Wyoming Nonprofit Corp. &middot; EIN obtained &middot; 501(c)(3) application in progress
           </p>
           <p className="text-xs text-white/30 font-mono">
             <a href="mailto:hello@firsthand-foundation.com" className="text-white/30 no-underline hover:text-white/50 transition-colors">

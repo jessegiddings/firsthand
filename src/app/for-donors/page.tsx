@@ -1,40 +1,35 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { useState, FormEvent } from "react";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
+import { EyebrowLabel, Button, Badge } from "@/components/ui";
+import { CommunityVoiceDemo } from "@/components/CommunityVoiceDemo";
 
-interface Recommendation {
-  project_id: string;
-  project_title: string;
-  reason: string;
-}
+/* ------------------------------------------------------------------ */
+/*  Data                                                               */
+/* ------------------------------------------------------------------ */
 
-interface MatchResult {
-  recommendations: Recommendation[];
-  intro: string;
-}
-
-const questions = [
+const matchQuestions = [
   {
     id: "region",
     question: "Where do you want your giving to have impact?",
-    options: ["Kenya", "India", "Canada & USA", "Anywhere"],
+    options: ["Kenya", "India", "Los Angeles", "Any"],
   },
   {
     id: "cause",
     question: "Which cause matters most to you?",
-    options: ["Education", "Clean Water & Health", "Economic Empowerment", "Food Security", "Any cause"],
+    options: ["Education", "Clean Water & Health", "Economic Empowerment", "Food Security"],
   },
   {
     id: "style",
     question: "How do you prefer to give?",
-    options: ["One specific project at a time", "A portfolio of projects", "Monthly recurring", "I'm not sure yet"],
+    options: ["One specific project", "A portfolio of projects", "Monthly recurring", "Not sure yet"],
   },
   {
     id: "budget",
     question: "What giving range feels right to start?",
-    options: ["Under $100", "$100–$500", "$500–$2,500", "$2,500+"],
+    options: ["Under $100", "$100\u2013$500", "$500\u2013$2,500", "$2,500+"],
   },
   {
     id: "story",
@@ -48,304 +43,361 @@ const questions = [
   },
 ];
 
+const milestones = [
+  { label: "Materials sourced & delivered", status: "verified" as const },
+  { label: "Roof trusses installed", status: "verified" as const },
+  { label: "Roofing sheets laid", status: "progress" as const },
+  { label: "Final inspection & handover", status: "pending" as const },
+];
+
+const benefits = [
+  {
+    title: "AI-Matched Projects",
+    description: "Personalized to your values, geography, and giving style",
+  },
+  {
+    title: "Escrow Protection",
+    description: "Funds held until milestones are independently verified",
+  },
+  {
+    title: "Community Voice Reports",
+    description: "Hear directly from the communities you support",
+  },
+];
+
+/* ------------------------------------------------------------------ */
+/*  Component                                                          */
+/* ------------------------------------------------------------------ */
+
 export default function ForDonorsPage() {
-  const [phase, setPhase] = useState<"intro" | "questions" | "loading" | "results" | "waitlist" | "done">("intro");
-  const [currentQ, setCurrentQ] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [matchResult, setMatchResult] = useState<MatchResult | null>(null);
-  const [email, setEmail] = useState("");
+  const [expandedQ, setExpandedQ] = useState(0);
+
+  // Waitlist form state
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [interest, setInterest] = useState("");
+  const [giftSize, setGiftSize] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [fadeIn, setFadeIn] = useState(true);
+  const [formStatus, setFormStatus] = useState<"idle" | "success" | "error">("idle");
 
-  const selectAnswer = (questionId: string, answer: string) => {
-    const newAnswers = { ...answers, [questionId]: answer };
-    setAnswers(newAnswers);
-
-    // Animate transition
-    setFadeIn(false);
-    setTimeout(() => {
-      if (currentQ < questions.length - 1) {
-        setCurrentQ(currentQ + 1);
-      } else {
-        // All questions answered — get recommendations
-        setPhase("loading");
-        fetchRecommendations(newAnswers);
-      }
-      setFadeIn(true);
-    }, 300);
-  };
-
-  const fetchRecommendations = async (donorAnswers: Record<string, string>) => {
-    try {
-      const res = await fetch("/api/donor-match", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ answers: donorAnswers }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setMatchResult(data);
-        setPhase("results");
-      } else {
-        setPhase("waitlist");
-      }
-    } catch {
-      setPhase("waitlist");
-    }
-  };
-
-  const handleWaitlistSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    if (!email || !name) return;
     setSubmitting(true);
+    setFormStatus("idle");
     try {
-      // Save to donor preferences with recommendations
-      if (matchResult) {
-        await fetch("/api/donor-match", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ answers, email }),
-        });
-      }
-      // Also add to waitlist
-      await fetch("/api/waitlist", {
+      const res = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, type: "DONOR" }),
+        body: JSON.stringify({ email, name, type: "DONOR" }),
       });
-      setPhase("done");
+      if (!res.ok) throw new Error("Request failed");
+      setFormStatus("success");
     } catch {
-      // Still show success
-      setPhase("done");
+      setFormStatus("error");
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sage to-[#2a3d30]">
-      {/* Nav */}
-      <nav className="px-6 md:px-12 h-[60px] flex items-center justify-between sticky top-0 z-50">
-        <Link href="/" className="font-display text-[22px] font-black text-terra tracking-[-0.02em] no-underline">
-          First<em className="text-white not-italic font-display italic">hand</em>
-        </Link>
-        <span className="px-4 py-[7px] rounded-md text-xs font-semibold bg-white/10 text-white/70">
-          For Donors
-        </span>
-      </nav>
+    <div className="min-h-screen bg-white">
+      <Navbar />
 
-      <div className="max-w-[680px] mx-auto px-6 md:px-12 py-12 min-h-[calc(100vh-60px)] flex flex-col justify-center">
-
-        {/* Intro */}
-        {phase === "intro" && (
-          <div className="text-center animate-fade-up">
-            <div className="font-mono text-[10px] tracking-[0.2em] text-white/40 uppercase mb-6">
-              <span className="inline-block w-6 h-px bg-white/30 align-middle mr-3" />
-              For Donors
-            </div>
-            <h1 className="font-display text-[clamp(40px,6vw,72px)] font-black leading-[0.95] tracking-[-0.025em] text-white mb-6">
-              Give with certainty.<br />For the first time.
+      {/* ── Main two-column layout ── */}
+      <main className="max-w-7xl mx-auto px-6 md:px-12 py-16 md:py-24 grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16">
+        {/* ── LEFT COLUMN ── */}
+        <div className="lg:col-span-3 space-y-16">
+          {/* Hero */}
+          <section>
+            <EyebrowLabel className="mb-5">For Donors</EyebrowLabel>
+            <h1 className="font-display text-[clamp(36px,5vw,56px)] font-black leading-[1.05] tracking-[-0.025em] text-ink mb-5">
+              Give to something<br />you can prove.
             </h1>
-            <p className="text-lg text-white/65 max-w-[480px] mx-auto mb-10 leading-[1.75]">
-              Answer five quick questions and we&apos;ll match you with verified projects that align with your values.
+            <p className="text-lg text-[#555] leading-[1.75] max-w-xl">
+              Firsthand matches you with verified projects, holds funds in escrow until
+              milestones are confirmed, and lets you hear directly from the communities you
+              support. No guesswork. No middlemen skimming overhead. Just verified impact.
             </p>
-            <button
-              onClick={() => { setPhase("questions"); setFadeIn(true); }}
-              className="px-8 py-4 bg-terra text-white rounded-md font-body text-sm font-semibold cursor-pointer border-none transition-colors hover:bg-terra-light"
-            >
-              Find My Projects &rarr;
-            </button>
-            <p className="text-xs text-white/30 mt-4">Takes about 30 seconds. No account needed.</p>
-          </div>
-        )}
+          </section>
 
-        {/* Questions */}
-        {phase === "questions" && (
-          <div className={cn("transition-all duration-300", fadeIn ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4")}>
-            {/* Progress */}
-            <div className="flex gap-1.5 mb-12 justify-center">
-              {questions.map((_, i) => (
-                <div
-                  key={i}
-                  className={cn(
-                    "h-1 rounded-full transition-all duration-500",
-                    i <= currentQ ? "bg-terra w-8" : "bg-white/20 w-4"
-                  )}
-                />
-              ))}
+          {/* AI Matching Teaser */}
+          <section>
+            <EyebrowLabel className="mb-5">AI Matching Preview</EyebrowLabel>
+            <h2 className="font-display text-2xl font-bold text-ink mb-6">
+              Five questions. One perfect match.
+            </h2>
+
+            <div className="border border-[#e5e5e0] rounded-lg overflow-hidden divide-y divide-[#e5e5e0]">
+              {matchQuestions.map((q, i) => {
+                const isExpanded = expandedQ === i;
+                return (
+                  <div key={q.id}>
+                    <button
+                      onClick={() => setExpandedQ(isExpanded ? -1 : i)}
+                      className="w-full flex items-center justify-between px-5 py-4 bg-transparent border-none cursor-pointer text-left"
+                    >
+                      <span className="flex items-center gap-3">
+                        <span className="font-mono text-[10px] tracking-[0.15em] text-[#999] uppercase w-5">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <span className="font-body text-sm font-medium text-ink">
+                          {q.question}
+                        </span>
+                      </span>
+                      <svg
+                        className={`w-4 h-4 text-[#999] transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+
+                    {isExpanded && (
+                      <div className="px-5 pb-5 pt-1 flex flex-wrap gap-2">
+                        {q.options.map((opt) => (
+                          <span
+                            key={opt}
+                            className="px-4 py-2 rounded-md text-sm font-body bg-[#f5f4f0] text-ink border border-[#e5e5e0] hover:border-terra hover:bg-[#fdf6f2] transition-colors cursor-default"
+                          >
+                            {opt}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
+          </section>
 
-            <div className="text-center mb-10">
-              <div className="font-mono text-[10px] tracking-[0.2em] text-white/40 uppercase mb-4">
-                Question {currentQ + 1} of {questions.length}
+          {/* Sample Project Card */}
+          <section>
+            <EyebrowLabel className="mb-5">Sample Project</EyebrowLabel>
+            <div className="border border-[#e5e5e0] rounded-lg p-6 md:p-8 bg-[#FAFAF8]">
+              <div className="flex items-center gap-2 mb-3">
+                <Badge variant="live">Live</Badge>
+                <Badge variant="verified">Verified</Badge>
               </div>
-              <h2 className="font-display text-[clamp(28px,4vw,44px)] font-black leading-[1.1] tracking-[-0.02em] text-white">
-                {questions[currentQ].question}
-              </h2>
-            </div>
+              <h3 className="font-display text-xl font-bold text-ink mb-1">
+                Girls&apos; Secondary School Roof Replacement
+              </h3>
+              <p className="text-sm text-[#888] mb-6">Eldoret, Kenya</p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-[520px] mx-auto">
-              {questions[currentQ].options.map((opt) => (
-                <button
-                  key={opt}
-                  onClick={() => selectAnswer(questions[currentQ].id, opt)}
-                  className={cn(
-                    "px-5 py-4 rounded-lg text-left text-sm font-medium transition-all duration-200 cursor-pointer border",
-                    answers[questions[currentQ].id] === opt
-                      ? "bg-terra text-white border-terra"
-                      : "bg-white/10 text-white/90 border-white/15 hover:bg-white/20 hover:border-white/30"
-                  )}
-                >
-                  {opt}
-                </button>
-              ))}
-            </div>
-
-            {currentQ > 0 && (
-              <div className="text-center mt-8">
-                <button
-                  onClick={() => { setFadeIn(false); setTimeout(() => { setCurrentQ(currentQ - 1); setFadeIn(true); }, 300); }}
-                  className="text-xs text-white/40 hover:text-white/70 cursor-pointer bg-transparent border-none transition-colors"
-                >
-                  &larr; Back
-                </button>
+              {/* Stats row */}
+              <div className="grid grid-cols-3 gap-4 mb-8">
+                {[
+                  { label: "Goal", value: "$4,200" },
+                  { label: "Funded", value: "68%" },
+                  { label: "Timeline", value: "6 mo" },
+                ].map((s) => (
+                  <div key={s.label} className="text-center">
+                    <div className="font-display text-xl font-bold text-ink">{s.value}</div>
+                    <div className="font-mono text-[10px] tracking-[0.15em] uppercase text-[#999] mt-0.5">
+                      {s.label}
+                    </div>
+                  </div>
+                ))}
               </div>
-            )}
-          </div>
-        )}
 
-        {/* Loading */}
-        {phase === "loading" && (
-          <div className="text-center animate-fade-up">
-            <div className="flex items-center justify-center gap-1.5 mb-6">
-              <div className="w-2 h-2 rounded-full bg-terra animate-pulse" />
-              <div className="w-2 h-2 rounded-full bg-terra animate-pulse" style={{ animationDelay: "0.2s" }} />
-              <div className="w-2 h-2 rounded-full bg-terra animate-pulse" style={{ animationDelay: "0.4s" }} />
+              {/* Milestones */}
+              <div className="space-y-0">
+                {milestones.map((m, i) => (
+                  <div key={i} className="flex items-start gap-3 relative">
+                    {/* Vertical connector line */}
+                    {i < milestones.length - 1 && (
+                      <span className="absolute left-[7px] top-[18px] w-px h-full bg-[#e5e5e0]" />
+                    )}
+                    {/* Dot */}
+                    <span
+                      className={`relative z-10 mt-1 w-[15px] h-[15px] rounded-full border-2 flex-shrink-0 ${
+                        m.status === "verified"
+                          ? "bg-sage border-sage"
+                          : m.status === "progress"
+                          ? "bg-terra border-terra"
+                          : "bg-[#ddd] border-[#ccc]"
+                      }`}
+                    />
+                    <div className="pb-4">
+                      <span className="font-body text-sm text-ink">{m.label}</span>
+                      <span className="block font-mono text-[10px] tracking-[0.1em] uppercase mt-0.5 text-[#999]">
+                        {m.status === "verified"
+                          ? "Verified"
+                          : m.status === "progress"
+                          ? "In progress"
+                          : "Pending"}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-            <h2 className="font-display text-2xl font-bold text-white mb-2">Finding your perfect projects...</h2>
-            <p className="text-sm text-white/50">Matching your values with verified community needs.</p>
-          </div>
-        )}
+          </section>
 
-        {/* Results */}
-        {phase === "results" && matchResult && (
-          <div className="animate-fade-up">
-            <div className="text-center mb-10">
-              <div className="font-mono text-[10px] tracking-[0.2em] text-white/40 uppercase mb-4">Your Matches</div>
-              <h2 className="font-display text-[clamp(28px,4vw,44px)] font-black leading-[1.1] tracking-[-0.02em] text-white mb-4">
-                We found your projects.
-              </h2>
-              <p className="text-sm text-white/65 leading-[1.7] max-w-[420px] mx-auto">
-                {matchResult.intro}
-              </p>
-            </div>
+          {/* Community Voice Demo */}
+          <section>
+            <CommunityVoiceDemo />
+          </section>
+        </div>
 
-            <div className="space-y-4 mb-12">
-              {matchResult.recommendations.map((rec, i) => (
-                <div key={i} className="bg-white rounded-lg p-6 border-l-4 border-terra">
-                  <h3 className="font-display text-lg font-bold text-ink mb-2">{rec.project_title}</h3>
-                  <p className="text-sm text-gray leading-[1.7] mb-4">{rec.reason}</p>
-                  <button className="px-5 py-2.5 bg-terra text-white rounded-md text-xs font-semibold cursor-pointer border-none transition-colors hover:bg-terra-light">
-                    Fund This Project &rarr;
-                  </button>
+        {/* ── RIGHT COLUMN (sticky waitlist) ── */}
+        <aside className="lg:col-span-2">
+          <div className="lg:sticky lg:top-24">
+            <div className="rounded-lg border border-[#e5e5e0] bg-[#FAFAF8] overflow-hidden">
+              {/* Terracotta accent bar */}
+              <div className="h-[3px] bg-terra" />
+
+              <div className="p-6 md:p-8">
+                <h2 className="font-display text-xl font-bold text-ink mb-2">
+                  Join the Donor Waitlist
+                </h2>
+                <p className="text-sm text-[#666] leading-[1.7] mb-6">
+                  Be first to fund verified projects when we launch in 2026.
+                  Get early access and pilot project updates.
+                </p>
+
+                {formStatus === "success" ? (
+                  <div className="text-center py-8">
+                    <div className="w-10 h-10 rounded-full bg-sage/10 flex items-center justify-center mx-auto mb-4">
+                      <svg className="w-5 h-5 text-sage" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <p className="font-display text-lg font-bold text-ink mb-1">
+                      You&apos;re on the list.
+                    </p>
+                    <p className="text-sm text-[#666]">
+                      We&apos;ll be in touch before launch.
+                    </p>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    {/* Full Name */}
+                    <div>
+                      <label className="block font-mono text-[10px] tracking-[0.15em] uppercase text-[#999] mb-1.5">
+                        Full Name
+                      </label>
+                      <input
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                        placeholder="Your full name"
+                        className="w-full px-4 py-3 rounded-md border border-[#ddd] bg-white text-sm font-body text-ink placeholder:text-[#bbb] focus:outline-none focus:border-terra transition-colors"
+                      />
+                    </div>
+
+                    {/* Email */}
+                    <div>
+                      <label className="block font-mono text-[10px] tracking-[0.15em] uppercase text-[#999] mb-1.5">
+                        Email
+                      </label>
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        placeholder="you@example.com"
+                        className="w-full px-4 py-3 rounded-md border border-[#ddd] bg-white text-sm font-body text-ink placeholder:text-[#bbb] focus:outline-none focus:border-terra transition-colors"
+                      />
+                    </div>
+
+                    {/* Giving Interest */}
+                    <div>
+                      <label className="block font-mono text-[10px] tracking-[0.15em] uppercase text-[#999] mb-1.5">
+                        Giving Interest
+                      </label>
+                      <select
+                        value={interest}
+                        onChange={(e) => setInterest(e.target.value)}
+                        className="w-full px-4 py-3 rounded-md border border-[#ddd] bg-white text-sm font-body text-ink focus:outline-none focus:border-terra transition-colors appearance-none"
+                      >
+                        <option value="">Select an area</option>
+                        <option value="education">Education</option>
+                        <option value="water">Water</option>
+                        <option value="economic-empowerment">Economic empowerment</option>
+                        <option value="foster-youth-la">Foster youth LA</option>
+                        <option value="all">All</option>
+                      </select>
+                    </div>
+
+                    {/* Typical Gift Size */}
+                    <div>
+                      <label className="block font-mono text-[10px] tracking-[0.15em] uppercase text-[#999] mb-1.5">
+                        Typical Gift Size
+                      </label>
+                      <select
+                        value={giftSize}
+                        onChange={(e) => setGiftSize(e.target.value)}
+                        className="w-full px-4 py-3 rounded-md border border-[#ddd] bg-white text-sm font-body text-ink focus:outline-none focus:border-terra transition-colors appearance-none"
+                      >
+                        <option value="">Select a range</option>
+                        <option value="under-100">Under $100</option>
+                        <option value="100-500">$100&#8211;$500</option>
+                        <option value="500-2500">$500&#8211;$2,500</option>
+                        <option value="2500-plus">$2,500+</option>
+                      </select>
+                    </div>
+
+                    {/* Submit */}
+                    <Button
+                      type="submit"
+                      variant="primary"
+                      arrow
+                      disabled={submitting}
+                      className="w-full justify-center"
+                    >
+                      {submitting ? "Joining..." : "Join the Waitlist"}
+                    </Button>
+
+                    {formStatus === "error" && (
+                      <p className="text-sm text-[#c44] text-center">
+                        Something went wrong. Try again or email{" "}
+                        <a href="mailto:hello@firsthand-foundation.com" className="underline">
+                          hello@firsthand-foundation.com
+                        </a>
+                      </p>
+                    )}
+
+                    <p className="text-[11px] text-[#999] text-center leading-[1.6]">
+                      No spam. Just launch updates and pilot project previews.
+                    </p>
+                  </form>
+                )}
+
+                {/* Benefits */}
+                <div className="mt-8 pt-6 border-t border-[#e5e5e0] space-y-5">
+                  {benefits.map((b) => (
+                    <div key={b.title} className="flex gap-3">
+                      <div className="flex-shrink-0 mt-0.5">
+                        <svg className="w-4 h-4 text-sage" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <div>
+                        <div className="font-body text-sm font-semibold text-ink">{b.title}</div>
+                        <div className="text-[13px] text-[#888] leading-[1.6]">{b.description}</div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
 
-            {/* Waitlist form */}
-            <div className="bg-white/10 rounded-lg p-8 backdrop-blur-sm border border-white/10">
-              <div className="text-center mb-6">
-                <h3 className="font-display text-xl font-bold text-white mb-2">Join the waitlist</h3>
-                <p className="text-sm text-white/60">We&apos;ll notify you when these projects go live on the platform.</p>
+                {/* Legal */}
+                <p className="mt-6 text-[10px] text-[#aaa] italic leading-[1.6]">
+                  Firsthand Foundation is a Wyoming nonprofit corporation. 501(c)(3)
+                  tax-exempt status is pending IRS determination. Donations may not be
+                  tax-deductible until the determination letter is received.
+                </p>
               </div>
-              <form onSubmit={handleWaitlistSubmit} className="flex flex-col gap-3 max-w-[400px] mx-auto">
-                <input
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Your name"
-                  className="w-full px-5 py-3.5 font-body text-sm rounded-md outline-none bg-white/10 text-white border border-white/20 placeholder:text-white/40 focus:border-white/60 transition-colors"
-                />
-                <input
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  type="email"
-                  placeholder="Your email address"
-                  required
-                  className="w-full px-5 py-3.5 font-body text-sm rounded-md outline-none bg-white/10 text-white border border-white/20 placeholder:text-white/40 focus:border-white/60 transition-colors"
-                />
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="w-full px-7 py-3.5 bg-terra text-white rounded-md font-body text-sm font-semibold cursor-pointer border-none transition-colors hover:bg-terra-light disabled:opacity-50"
-                >
-                  {submitting ? "Joining..." : "Join Waitlist \u2192"}
-                </button>
-                <p className="text-[10px] text-white/35 italic leading-[1.6] mt-2 text-center">
-                  Firsthand Foundation is a Wyoming nonprofit corporation. 501(c)(3) tax-exempt status is pending IRS determination. Donations may not be tax-deductible until the determination letter is received.
-                </p>
-              </form>
             </div>
           </div>
-        )}
+        </aside>
+      </main>
 
-        {/* Waitlist fallback (when AI fails) */}
-        {phase === "waitlist" && (
-          <div className="animate-fade-up">
-            <div className="text-center mb-8">
-              <h2 className="font-display text-[clamp(28px,4vw,44px)] font-black leading-[1.1] tracking-[-0.02em] text-white mb-4">
-                Thanks for telling us what matters to you.
-              </h2>
-              <p className="text-sm text-white/65 leading-[1.7] max-w-[420px] mx-auto">
-                We&apos;re curating projects that match your preferences. Join the waitlist and we&apos;ll send your personalised recommendations when we launch.
-              </p>
-            </div>
-            <div className="bg-white/10 rounded-lg p-8 backdrop-blur-sm border border-white/10">
-              <form onSubmit={handleWaitlistSubmit} className="flex flex-col gap-3 max-w-[400px] mx-auto">
-                <input
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Your name"
-                  className="w-full px-5 py-3.5 font-body text-sm rounded-md outline-none bg-white/10 text-white border border-white/20 placeholder:text-white/40 focus:border-white/60 transition-colors"
-                />
-                <input
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  type="email"
-                  placeholder="Your email address"
-                  required
-                  className="w-full px-5 py-3.5 font-body text-sm rounded-md outline-none bg-white/10 text-white border border-white/20 placeholder:text-white/40 focus:border-white/60 transition-colors"
-                />
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="w-full px-7 py-3.5 bg-terra text-white rounded-md font-body text-sm font-semibold cursor-pointer border-none transition-colors hover:bg-terra-light disabled:opacity-50"
-                >
-                  {submitting ? "Joining..." : "Join Waitlist \u2192"}
-                </button>
-                <p className="text-[10px] text-white/35 italic leading-[1.6] mt-2 text-center">
-                  Firsthand Foundation is a Wyoming nonprofit corporation. 501(c)(3) tax-exempt status is pending IRS determination. Donations may not be tax-deductible until the determination letter is received.
-                </p>
-              </form>
-            </div>
-          </div>
-        )}
-
-        {/* Done */}
-        {phase === "done" && (
-          <div className="text-center animate-fade-up">
-            <div className="text-[40px] mb-4">✓</div>
-            <h2 className="font-display text-[28px] font-bold text-white mb-3">You&apos;re on the list.</h2>
-            <p className="text-sm text-white/60 mb-8">We&apos;ll be in touch when Firsthand opens its doors.</p>
-            <Link
-              href="/"
-              className="text-xs text-terra hover:text-terra-light transition-colors no-underline"
-            >
-              &larr; Back to home
-            </Link>
-          </div>
-        )}
-      </div>
+      <Footer />
     </div>
   );
 }
